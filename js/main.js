@@ -1,158 +1,104 @@
-// Script by Jessica Steslow using Lab 2 Module 1 exercises
+// Script by Jessica Steslow using Lab 2 Module 2 exercises for Activity 9
 
-window.onload = function(){
+//begin script when window loads
+window.onload = setMap();
 
-  var w = 900, h = 500;
+//set up choropleth map
+function setMap(){
 
-  //Example 1.2 line 1...container block
- var container = d3.select("body") //get the <body> element from the DOM
-     .append("svg") //put a new svg in the body
-     .attr("width", w) //assign the width
-     .attr("height", h) //assign the height
-     .attr("class", "container") //always assign a class (as the block name) for styling and future selection. Container assigned to class based on variable name container
-     .style("background-color", "rgba(0,0,0,0.2)"); //only put a semicolon at the end of the block!
+    //map frame dimensions
+    var width = 1000,
+        height = 800;
 
-     var innerRect = container.append("rect")
-     .datum(400) //a single value is a DATUM
-     .attr("width", function(d){ //rectangle width
-         return d * 2; //400 * 2 = 800
-     })
-     .attr("height", function(d){ //rectangle height
-         return d; //400
-     })
-     .attr("class", "innerRect") //class name
-     .attr("x", 50) //position from left on the x (horizontal) axis
-     .attr("y", 50) //position from top on the y (vertical) axis
-     .style("fill", "#FFFFFF"); //fill color
- console.log(innerRect);
+    //create new svg container for the map
+    var map = d3.select("body")
+        .append("svg")
+        .attr("class", "map")
+        .attr("width", width)
+        .attr("height", height);
 
+    //create Azimuthal equal area conic projection centered on Arizona, USA
+    var projection = d3.geoAzimuthalEqualArea()
+        .center([0, 34.2])
+        .rotate([112,0,0])
+        .scale(5000)
+        .translate([width/2, height/2]);
 
- var cityPop = [
-  { 
-      city: 'Madison',
-      population: 233209
-  },
-  {
-      city: 'Milwaukee',
-      population: 594833
-  },
-  {
-      city: 'Green Bay',
-      population: 104057
-  },
-  {
-      city: 'Superior',
-      population: 27244
-  }
-];
+    //create the path generator
+    var path = d3.geoPath()
+        .projection(projection);
 
-var x = d3.scaleLinear() //create the scale
-.range([90, 750]) //output min and max //was 90,810
-.domain([0, 3]); //input min and max
+    //graticule likely not needed for my purpose, it's here in case I use it later
+    //create graticule generator
+    var graticule = d3.geoGraticule()
+        .step([5, 5]); //place graticule lines every X degrees of longitude and latitude
 
-    //find the minimum value of the array
-    var minPop = d3.min(cityPop, function(d){
-      return d.population;
-  });
+    //create graticule background
+    var gratBackground = map.append("path")
+        .datum(graticule.outline()) //bind graticule background
+        .attr("class", "gratBackground") //assign class for styling
+        .attr("d", path); //project graticule
 
-  //find the maximum value of the array
-  var maxPop = d3.max(cityPop, function(d){
-      return d.population;
-  });
-
-  //scale for circles center y coordinate
-  var y = d3.scaleLinear()
-  .range([450, 50]) //was 440, 95
-  .domain([0, 700000]); //was minPop, maxPop
-
-  //color scale generator 
-  var color = d3.scaleLinear()
-  .range([
-      "#FDBE85",
-      "#D94701"
-  ])
-  .domain([
-      minPop, 
-      maxPop
-  ]);
+    //create graticule lines
+    var gratLines = map.selectAll(".gratLines") //select graticule elements that will be created
+        .data(graticule.lines()) //bind graticule lines to each element to be created
+        .enter() //create an element for each datum
+        .append("path") //append each element to the svg as a path element
+        .attr("class", "gratLines") //assign class for styling
+        .attr("d", path); //project graticule lines
 
 
-var circles = container.selectAll(".circles") //create an empty selection
-  .data(cityPop) //here we feed in an array
-  .enter() //one of the great mysteries of the universe
-  .append("circle") //inspect the HTML--holy crap, there's some circles there
-  .attr("class", "circles")
-  .attr("id", function(d){
-      return d.city;
-  })
-  .attr("r", function(d){
-      //calculate the radius based on population value as circle area
-      var area = d.population * 0.01;
-      return Math.sqrt(area/Math.PI);
-  })
-  .attr("cx", function(d, i){
-    //use the scale generator with the index to place each circle horizontally
-    return x(i)
-  })
-  .attr("cy", function(d){
-    return y(d.population);
-  })
-  .style("fill", function(d, i){ //add a fill based on the color scale generator
-      return color(d.population);
-  })
-  .style("stroke", "#000"); //black circle stroke
+    //use Promise.all to parallelize asynchronous data loading
+    var promises = [d3.csv("data/EnvironmentalPerAZCounty.csv"),
+                    d3.json("data/AZcounties.topojson"),
+                    d3.json("data/Mexicostates.topojson"),
+                    d3.json("data/USstates.topojson")];
+    Promise.all(promises).then(callback);
 
+    function callback(data) {
+        var csvData = data[0],
+            counties = data[1],
+            mexico = data[2],
+            states = data[3];
+        console.log(csvData);
+        console.log(counties);  //helpful to log these to confirm object name
+        console.log(mexico);    //object name used below in topojson.feature()
+        console.log(states);
 
-  var yAxis = d3.axisLeft(y);
+        //translate TopoJSON to GeoJSON
+        //.features used for geojson for individual data and styling (the choropleth data)
+        var azCounties = topojson.feature(counties, counties.objects.AZcounties).features;
+            //slightly different formatting for base data
+            mexicoBoundary = topojson.feature(mexico, mexico.objects.Mexicostates),
+            statesBoundary = topojson.feature(states, states.objects.USstates);
 
-  //create axis g element and add axis
-  var axis = container.append("g")
-      .attr("class", "axis")
-      .attr("transform", "translate(50, 0)")
-      .call(yAxis);
+            console.log(csvData);   //helpful to log these to confirm data type change
+            console.log(counties);
+            console.log(mexico);
 
-  var title = container.append("text")
-    .attr("class", "title")
-    .attr("text-anchor", "middle")
-    .attr("x", 450)
-    .attr("y", 30)
-    .text("City Populations");
+        //add base data to map with append
+        var mapMexico = map.append("path")
+            .datum(mexicoBoundary)
+            .attr("class", "mexico")
+            .attr("d", path);
 
-  var labels = container.selectAll(".labels")
-      .data(cityPop)
-      .enter()
-      .append("text")
-      .attr("class", "labels")
-      .attr("text-anchor", "left")
-      .attr("y", function(d){
-          //vertical position centered on each circle
-          return y(d.population);
-      });
+        var mapStates = map.append("path")
+            .datum(statesBoundary)
+            .attr("class", "states")
+            .attr("d", path);
 
-  //create format generator
-  var format = d3.format(",");
+        //add data to apply choropleth later with selectAll
+        //this is further down in code to draw on top of base features
+        var mapCounties = map.selectAll(".mapCounties")
+            .data(azCounties)
+            .enter()
+            .append("path")
+            .attr("class", function(d){
+                return "AZ " + d.properties.NAME;
+            })
+            .attr("d", path);
 
-  //first line of label
-  var nameLine = labels.append("tspan")
-      .attr("class", "nameLine")
-      .attr("x", function(d,i){
-          //horizontal position to the right of each circle
-          return x(i) + Math.sqrt(d.population * 0.01 / Math.PI) + 5;
-      })
-      .text(function(d){
-          return d.city;
-      });
+    };
 
-  //second line of label
-  var popLine = labels.append("tspan")
-      .attr("class", "popLine")
-      .attr("x", function(d,i){
-          //horizontal position to the right of each circle
-          return x(i) + Math.sqrt(d.population * 0.01 / Math.PI) + 5;
-      })
-      .attr("dy", "15") //vertical offset
-      .text(function(d){
-          return "Pop. " + format(d.population); //use format generator to format numbers
-      });
 
 };

@@ -4,29 +4,23 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width">
             <title>Unit 3</title>
-
-        <!--put your external stylesheet links here-->
         <link rel="stylesheet" href="css/style.css">
-        <!--[if IE<9]>
-            <link rel="stylesheet" href="css/style.ie.css">
-        <![endif]-->
-
-         <!--you can also place internal styles here;
-             place these within <style> tags-->
-        
     </head>
 
     <body>
-        <!--put your initial page content here-->
         <h1>Geog 575 Unit 3 Practice</h1>
+        <h2>Activity 9</h2>
         <p>Jessica Steslow</p>
-        <p>August 2023</p>
+        <p>July-August 2023</p>
+        <br>
+        <h2>Environmental Data per County in Arizona</h2>
+        <p>Having trouble balancing the generalization of the county lines and still having it match up with the state lines. May need to forgo state topojsons for US and Mexico and just use country polys. Merge states? Add a layer for AZ poly without counties to use as a thicker stroke underneath county polys?</p>
+        <p>I'll probably do more styling with the boundary between states vs boundary vs US and Mexico</p>
+        <p>Will likely remove the graticule on the large scale map in later versions. A stretch goal is to add a small scale locator map in reference to the globe/US&Mexico, which would probably have a graticule.</p>
 
-        <!--you can also use this space for internal scripts;
-        place these within <script> tags-->
 
-        <!--put your external script links here-->
-        <script type="text/javascript" src="js/main.js"></script>
 		<script type="text/javascript" src="lib/d3.v7.js"></script>
+        <script type="text/javascript" src="lib/topojson.min.js"></script>
+        <script type="text/javascript" src="js/main.js"></script>
     </body>
 </html>
