@@ -22,25 +22,47 @@
 
 /*Styling items related to AZ county data in main.js*/
 .AZ {
-  fill: #EEE;
-  stroke: darkred;
+
+  stroke: #333;
   stroke-width: 2px;
 }
 
 .states {
   fill: #999;
-  stroke: #333;
+  stroke: #555;
   stroke-width: 2px;
 }
 
 .mexico {
   fill: #bbb;
+  stroke: #555;
+  stroke-width: 2px;
+}
+
+.basemap {
+  border: 0 solid #333;
+}
+
+.chart {
+  background-color: #ccc;
+}
+
+.chartTitle {
+  font-family: sans-serif;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.bars {
   stroke: #333;
   stroke-width: 2px;
 }
 
-.map {
-  border: medium solid #333;
+/*for numbers on the bars*/
+.numbers {
+  fill: #333;
+  font-family: sans-serif;
+  font-weight: bold;
 }
 
 .gratLines {
@@ -51,4 +73,38 @@
 
 .gratBackground {
   fill: #D5E3FF;
+}
+
+/*Additional website page styling*/
+@media screen and (min-width: 768px) {
+  #foot-1 {
+    text-align: left;
+  }
+  #foot-2 {
+    text-align: center;
+  }
+  #foot-3 {
+    text-align: right;
+  }
+}
+
+#mapdiv {
+  text-align: center;
+}
+
+#chartdiv {
+  text-align: center;
+}
+
+.text-orange {
+  color: orange !important;
+}
+
+.bg-tealorange {
+  background-image: linear-gradient(to right, rgba(0, 128, 128, 0), teal, orange, rgba(255, 166, 0, 0));
+  height: 3px;
+}
+
+.bg-blue-fade {
+  background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(var(--bs-dark-rgb)), rgba(var(--bs-dark-rgb)), rgba(0, 0, 0, 0));
 }
