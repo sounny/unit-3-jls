@@ -1,5 +1,9 @@
 //Script by Jessica Steslow for Lab 2
 
+//moving around highlight and dehighlight desc into updatemap and update chart
+
+
+
 //wrap everything in an anonymous function which is immediately invoked
 //also prevents items in this JS file being in global scope
 (function(){
@@ -326,6 +330,14 @@
         if (value >= 0) {return colorScale(d.properties[expressed]);} 
           else {return "#ccc";}
         });
+
+    var mapCountiesEvent = basemap.selectAll(".mapCounties")
+        .on("mouseover", function(event, d){highlight(d.properties);})
+        .on("mouseout", function(event, d){dehighlight(d.properties);})
+        .on("mousemove", moveLabel);
+
+    //building description element for enumeration units
+    var desc = mapCounties.append("desc").text('{"stroke": "#333", "stroke-width": "2px"}');
 
     var chartTitle = d3.select(".chartTitle");
 

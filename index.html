@@ -18,23 +18,48 @@
     <div class="container" style="max-width:1600px; margin:auto; margin-top:10px;">
       
       <!--Header Section-->
-      <div class="header">
-        <h6 class="text-muted">Jessica Steslow · Geog 575 · Unit 3 · <span class="text-warning">Activity 10</span></h6>
+      <div class="header mt-4">
+        <h6 style = "display: none" class="text-muted">Jessica Steslow · Geog 575 · Lab 2</h6>
         <div class="bg-tealorange"></div>
         <div class="bg-blue-fade m-0 p-3"><h1 style="text-align:center; margin-bottom:0;">Environmental Data per County in Arizona, USA</h1></div>
         <div class="bg-tealorange"></div>
-        <br><br>
+        <h6 class="mt-3 text-center">
+          <span class="text-primary">Drinking water, </span>
+          <span class="text-success">waste & environmental hazards, </span>
+          <span class="text-orange"> and demographic data</span>
+        </h6>
+        <br>
       </div>
       
-      <!--Data Section-->
-      <div class="d-flex flex-wrap justify-content-center g-0">
+      
+      <!--Locator Map Section
+      <div class="container p-4 my-2 row">
+        <div class="text-end align-self-center pe-5 col-lg">
+          <h5>Arizona is a state in the <br>southwestern United States,<br> bordering Mexico.</h5>
+        </div>
+        <div class="col-lg d-flex justify-content-center">
+          <div class="d-flex" style="width:100%">
+            <img src="img/LocatorMapAZ_smaller.jpg"  style="filter:grayscale(0.2); border: 2px white solid; width:100%;">
+          </div>
+        </div>
+      </div> -->
+      
+      <!--Map and Charts Section-->
+      <div class="container" id="menudiv"></div>
+      <div style="position:relative;" class="d-flex flex-wrap justify-content-center g-0">
           <div class="border border-dark m-3" id="mapdiv"></div>
-          <div class="border border-dark m-3" id="chartdiv"></div>
+          <div class="border border-dark m-3" id="chartdiv">
+            <div class="border border-warning" id="titlediv"></div>
+          </div>
       </div>
 
-      <!--Definitions Section-->
-      <div class="container border border-1 border-light p-5 my-5" style="min-height:400px;" id="sourcesdiv">
-        <h4 class="pb-4">Data Defintions</h4>
+
+      
+
+
+      <!--Sources and Definitions Section-->
+      <div class="container border border-1 border-light p-5 my-5" style="min-height:700px;" id="sourcesdiv">
+        <h4 class="pb-4">Data</h4>
         <!-- Nav tabs -->
         <ul class="nav nav-tabs" id="myTab" role="tablist">
           <li class="nav-item" role="presentation">
@@ -53,8 +78,21 @@
         <!-- Tab panes -->
         <div class="tab-content pt-3">
         <div class="tab-pane active" id="general" role="tabpanel" aria-labelledby="general-tab">
-          <p>Data presented on the map and bar graphs was collected from the <span class="text-warning">Arizona Department of Environmental Quality (ADEQ)</span> in July 2023.
-            <br>See the different tabs for more details on sources of each parameter, as stated by ADEQ.</p>
+          <!--Locator Map Section-->
+          <div class="pb-4 my-2 row">
+            <div class="text-end align-self-center col-md-4">
+              <div class="ms-auto" style="max-width: 300px;">
+                <h6>Arizona is a state in the southwestern United States, bordering Mexico.</h6>
+              </div>
+            </div>
+            <div class="col-md-8" style="min-width:400px; max-width: 600px;">
+              <div class="" style="width:100%">
+                <img src="img/LocatorMapAZ_smaller.jpg"  alt="Map showing AZ in relation to countries of North America." style="filter:grayscale(0.3); border: 2px white solid; width:100%;">
+              </div>
+            </div>
+          </div>
+          <p>Data presented was collected from the <span class="text-warning">Arizona Department of Environmental Quality (ADEQ)</span> in August 2023.
+            See the different tabs for more details on sources of each parameter.</p>
           <p>ADEQ displays this information on an interactive <a target="_blank" href="https://adeq.maps.arcgis.com/apps/MapSeries/index.html?appid=cc0da69679c74b8ca25125c15651805a" alt="ADEQ AZ Counties Dashboard">dashboard</a> (though without a choropleth map!)</p>
         </div>
         <div class="tab-pane" id="water" role="tabpanel" aria-labelledby="water-tab">
@@ -88,15 +126,16 @@
       </div>
 
       <!--Footer Section-->
-      <div class="footer bg-dark text-light p-3">
+      <footer class="bg-dark text-light p-3">
         <div class="row g-2">
           <div class="col-md py-1" id="foot-1">Author: Jessica Steslow<br>University of Wisconsin-Madison<br>Online GIS Development & Cartography</div>
           <div class="col-md py-1" id="foot-2">Geog 575 Interactive Cartography<br>August 2023<br>Lab 2: Mapping with D3</div>
           <div class="col-md py-1" id="foot-3">Made with:
-            <br><a href="https://d3js.org/">D3 JavaScript library</a> for data visualizations
-            <br><a href="https://getbootstrap.com/">Bootstrap</a> & <a href="https://bootswatch.com/">Bootswatch</a> for web styling</div>
+            <a href="https://www.naturalearthdata.com/" target="_blank">Natural Earth</a>
+            <br><a href="https://d3js.org/" target="_blank">D3 JavaScript library</a>
+            <br><a href="https://getbootstrap.com/" target="_blank">Bootstrap</a> & <a href="https://bootswatch.com/" target="_blank">Bootswatch</a></div>
         </div>
-      </div>
+      </footer>
 
     </div>
     <script type="text/javascript" src="lib/d3.v7.js"></script>
