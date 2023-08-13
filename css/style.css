@@ -175,6 +175,6 @@ footer a:hover {
   height: 3px;
 }
 
-.bg-blue-fade {
+.bg-dark-fade {
   background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(var(--bs-dark-rgb)), rgba(var(--bs-dark-rgb)), rgba(0, 0, 0, 0));
 }

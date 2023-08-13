@@ -1,8 +1,6 @@
 //Script by Jessica Steslow for Lab 2
 
-//moving around highlight and dehighlight desc into updatemap and update chart
-
-
+//working copy for debugging
 
 //wrap everything in an anonymous function which is immediately invoked
 //also prevents items in this JS file being in global scope
@@ -236,11 +234,11 @@
             else {return "#ccc";}
         })
         .on("mouseover", function(event, d){highlight(d.properties);})
-        .on("mouseout", function(event, d){dehighlight(d.properties);})
+        .on("mouseout", function(event, d){dehighlight(d.properties, mapCounties);})
         .on("mousemove", moveLabel);
 
     //building description element for enumeration units
-    var desc = mapCounties.append("desc").text('{"stroke": "#333", "stroke-width": "2px"}');
+    //var desc = mapCounties.append("desc").text('{"stroke": "#333", "stroke-width": "2px"}');
   };
 
   //function to create coordinated bar chart
@@ -265,7 +263,7 @@
         .attr("class", function(d){return "bars " + d.NAME;})
         .attr("width", mapWidth / csvData.length - 1)
         .on("mouseover", function(event, d){highlight(d);})
-        .on("mouseout", function(event, d){dehighlight(d);})
+        .on("mouseout", function(event, d){dehighlight(d), bars;})
         .on("mousemove", moveLabel);
 
     //annotate bars with attribute value text
@@ -275,15 +273,19 @@
         .append("text")
         .sort(function(a, b){return a[expressed]-b[expressed]})
         .attr("class", function(d){return "numbers " + d.NAME;})
-        .attr("text-anchor", "middle");  
+        .attr("text-anchor", "middle")
+        .on("mouseover",function(event, d){highlight(d)})
+        .on("mouseout",function(event, d){dehighlight(d), numbers})
+        .on("mousemove",moveLabel);
         
     updateChart(chartTitle, bars, numbers, csvData.length, colorScale, yScale);
 
     //building description element for bars, coincidentally the same as enumeration units
-    var desc = bars.append("desc").text('{"stroke": "#333", "stroke-width": "2px"}');
+    //var desc = bars.append("desc").text('{"stroke": "#333", "stroke-width": "2px"}');
 
     //building description element for numbers because numbers are on bars
-    var desc = numbers.append("desc").text('{"stroke": "none", "stroke-width": "none"}');
+    //var desc = numbers.append("desc").text('{"stroke": "none", "stroke-width": "2px"}');
+
   };
 
   //function to create a dropdown menu for attribute selection
@@ -331,14 +333,6 @@
           else {return "#ccc";}
         });
 
-    var mapCountiesEvent = basemap.selectAll(".mapCounties")
-        .on("mouseover", function(event, d){highlight(d.properties);})
-        .on("mouseout", function(event, d){dehighlight(d.properties);})
-        .on("mousemove", moveLabel);
-
-    //building description element for enumeration units
-    var desc = mapCounties.append("desc").text('{"stroke": "#333", "stroke-width": "2px"}');
-
     var chartTitle = d3.select(".chartTitle");
 
     //sort, resize, and recolor bars
@@ -350,13 +344,15 @@
         .duration(500);
 
     //set up numbers
-    var numbers = d3.selectAll(".numbers")
+    var numbers = d3.selectAll(".numbers") //search for class .bars with child "numbers"
         .sort(function(a,b){return a[expressed]-b[expressed]})
         .transition()
         .delay(function (d,i){return i*25})
         .duration(500);
 
     updateChart(chartTitle, bars, numbers, csvData.length, colorScale, yScale);
+    
+
   };
 
   function updateChart(chartTitle, bars, numbers, length, colorScale, yScale) {
@@ -384,6 +380,9 @@
             else {return "#ccc";}
         });
 
+
+
+        
     //update numbers
     numbers.attr("x", function (d, i) {
           var fraction = mapWidth / length;
@@ -410,10 +409,12 @@
             else {writeMode = "vertical-lr"};
             return writeMode;
         })
-        .text(function(d){return parseInt(d[expressed])
-        });
-
+        .text(function(d){
+          return parseInt(d[expressed]) //clears desc object in numbers?
+        }); 
         
+        console.log(numbers);
+
   };
 
   //function to highlight enumeration units and bars
@@ -422,12 +423,24 @@
     var selected = d3
         .selectAll("." + props.NAME)
         .style("stroke", "red")
-        .style("stroke-width", 2);
+        .style("stroke-width", "2px")
+        .raise();
     setLabel(props);
   }
 
   //function to reset the element style on mouseout
-  function dehighlight(props) {
+  function dehighlight(props, element) {
+    
+    var strokeStyle = "#333";
+    var strokeWidthStyle = "2px";
+    
+    if(element == "numbers") {strokeStyle = "none"; strokeWidthStyle = "0"};
+
+    var selected = d3
+        .selectAll("." + props.NAME)
+        .style("stroke", strokeStyle)
+        .style("stroke-width", strokeWidthStyle);
+    /*
     var selected = d3
         .selectAll("." + props.NAME)
         .style("stroke", function () {
@@ -439,13 +452,13 @@
 
     function getStyle(element, styleName) {
         var styleText = d3.select(element).select("desc").text();
-
         
         var styleObject = JSON.parse(styleText);
-        console.log(styleObject[styleName]); //no styleName in styleObject --> goes to 1st item in desc
 
         return styleObject[styleName];
     }
+    */
+    
     //remove info label
     d3.select(".infolabel").remove();
   }
@@ -475,7 +488,7 @@
         .getBoundingClientRect()
         .width;
 
-        /*
+        
     //use coordinates of mousemove event to set label coordinates
     var x1 = event.clientX + 10,
         y1 = event.clientY - 75,
@@ -492,7 +505,7 @@
         .style("left", x + "px")
         .style("top", y + "px");
 
-        */
+        
 
         d3.select(".infolabel")
           .style("left",4)
@@ -504,3 +517,24 @@
 
 
 })();
+
+
+
+
+/*
+
+
+Doesn't throw error:
+
+<text class="numbers Gila" text-anchor="middle" x="56.16666666666667" y="335" writing-mode="horizontal-tb" style="stroke: none; stroke-width: 2px;">0<desc>{"stroke": "none", "stroke-width": "2px"}</desc></text>
+
+
+
+Throws error:
+
+<text class="numbers Gila" text-anchor="middle" x="56.16666666666667" y="139.02122138819388" writing-mode="horizontal-tb" style="stroke: none; stroke-width: 2px;">27</text>
+
+
+
+
+*/
