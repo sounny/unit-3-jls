@@ -1,4 +1,4 @@
-//Script by Jessica Steslow for Lab 2
+//Script by Jessica Steslow for final Lab 2
 
 //wrap everything in an anonymous function which is immediately invoked
 //also prevents items in this JS file being in global scope
@@ -19,7 +19,7 @@
               "Provisionally Impaired Water Bodies",
               "Superfund Sites"];
 
-          var expressed = attrArray[5]; //initial attribute. I chose [5] for better numbers to work with
+          var expressed = attrArray[5]; //initial attribute loaded on map and charts
 
           const waterSet = new Set (
               ["Provisionally Impaired Water Bodies", 
@@ -107,13 +107,6 @@
               .attr("class", "states")
               .attr("d", path);
 
-          /*
-          //using same topogjson for AZ counties to create a border around the state of AZ
-          var mapAZBoundary = basemap.append("path")
-            .datum(azBoundary)
-            .attr("class", "az-border")
-            .attr("d", path);
-            */
 
           azCounties = joinData(azCounties, csvData)
 
@@ -131,27 +124,6 @@
       };
   };
 
-  /*function setGraticule (basemap, path){
-    //graticule likely not needed for large scale map, it's here in case I use it later
-    //create graticule generator
-    var graticule = d3.geoGraticule()
-        .step([5, 5]); //place graticule lines every X degrees of longitude and latitude
-
-    //create graticule background
-    var gratBackground = basemap.append("path")
-        .datum(graticule.outline()) //bind graticule background
-        .attr("class", "gratBackground") //assign class for styling
-        .attr("d", path); //project graticule
-
-    //create graticule lines
-    var gratLines = basemap.selectAll(".gratLines") //select graticule elements that will be created
-        .data(graticule.lines()) //bind graticule lines to each element to be created
-        .enter() //create an element for each datum
-        .append("path") //append each element to the svg as a path element
-        .attr("class", "gratLines") //assign class for styling
-        .attr("d", path); //project graticule lines
-  }; */
-
   function joinData(azCounties, csvData){
     //loop through csv to assign each set of csv attribute values to geojson region
     for (var i=0; i < csvData.length; i++){
@@ -163,7 +135,6 @@
         var geojsonProps = azCounties[a].properties; //the current region geojson properties
         var geojsonKey = geojsonProps.NAME; //the geojson primary key
         
-
         //where primary keys match, transfer csv data to geojson properties object
         if (geojsonKey == csvKey){
           //assign all attributes and values
@@ -236,7 +207,7 @@
         .on("mousemove", moveLabel);
 
     //building description element for enumeration units
-    var desc = mapCounties.append("desc").text('{"stroke": "#333", "stroke-width": "2px"}');
+    //var desc = mapCounties.append("desc").text('{"stroke": "#333", "stroke-width": "2px"}');
   };
 
   //function to create coordinated bar chart
@@ -261,7 +232,7 @@
         .attr("class", function(d){return "bars " + d.NAME;})
         .attr("width", mapWidth / csvData.length - 1)
         .on("mouseover", function(event, d){highlight(d);})
-        .on("mouseout", function(event, d){dehighlight(d);})
+        .on("mouseout", function(event, d){dehighlight(d)})
         .on("mousemove", moveLabel);
 
     //annotate bars with attribute value text
@@ -271,15 +242,19 @@
         .append("text")
         .sort(function(a, b){return a[expressed]-b[expressed]})
         .attr("class", function(d){return "numbers " + d.NAME;})
-        .attr("text-anchor", "middle");  
+        .attr("text-anchor", "middle")
+        .on("mouseover", function(event, d){highlight(d);})
+        .on("mouseout", function(event, d){dehighlight(d)})
+        .on("mousemove", moveLabel);
         
     updateChart(chartTitle, bars, numbers, csvData.length, colorScale, yScale);
 
     //building description element for bars, coincidentally the same as enumeration units
-    var desc = bars.append("desc").text('{"stroke": "#333", "stroke-width": "2px"}');
+    //var desc = bars.append("desc").text('{"stroke": "#333", "stroke-width": "2px"}');
 
     //building description element for numbers because numbers are on bars
-    var desc = numbers.append("desc").text('{"stroke": "none", "stroke-width": "none"}');
+    //var desc = numbers.append("desc").text('{"stroke": "none", "stroke-width": "2px"}');
+
   };
 
   //function to create a dropdown menu for attribute selection
@@ -338,13 +313,14 @@
         .duration(500);
 
     //set up numbers
-    var numbers = d3.selectAll(".numbers")
+    var numbers = d3.selectAll(".numbers") //search for class .bars with child "numbers"
         .sort(function(a,b){return a[expressed]-b[expressed]})
         .transition()
         .delay(function (d,i){return i*25})
         .duration(500);
 
     updateChart(chartTitle, bars, numbers, csvData.length, colorScale, yScale);
+
   };
 
   function updateChart(chartTitle, bars, numbers, length, colorScale, yScale) {
@@ -371,7 +347,7 @@
           if (value >= 0) {return colorScale(value);}
             else {return "#ccc";}
         });
-
+        
     //update numbers
     numbers.attr("x", function (d, i) {
           var fraction = mapWidth / length;
@@ -398,24 +374,50 @@
             else {writeMode = "vertical-lr"};
             return writeMode;
         })
-        .text(function(d){return parseInt(d[expressed])
-        });
+        .text(function(d){
+          return parseInt(d[expressed]) //clears desc object in numbers?
+        }); 
 
-        
   };
 
   //function to highlight enumeration units and bars
   function highlight(props) {
     //change stroke
+
     var selected = d3
-        .selectAll("." + props.NAME)
-        .style("stroke", "red")
-        .style("stroke-width", 2);
+        .selectAll(".AZ." + props.NAME + ",.bars." + props.NAME)
+        .style("stroke", "#333")
+        .style("stroke-width", "5px")
+        .raise();
+
+    var selectedNumbers = d3
+        .selectAll(".numbers." + props.NAME)
+        .style("stroke", "none")
+        .style("stroke-width", "0")
+        .raise();
+
     setLabel(props);
   }
 
   //function to reset the element style on mouseout
   function dehighlight(props) {
+    
+        var selected = d3
+          .selectAll(".AZ." + props.NAME)
+          .style("stroke", "#333")
+          .style("stroke-width", "2px");
+    
+        var selectedBars = d3
+          .selectAll(".bars." + props.NAME)
+          .style("stroke", "#333" )
+          .style("stroke-width", "2px");
+        
+        var selectedNumbers = d3
+          .selectAll(".numbers." + props.NAME)
+          .style("stroke", "none" )
+          .style("stroke-width", "0px");
+
+    /* code from lab module but I was not able to get getStyle to work
     var selected = d3
         .selectAll("." + props.NAME)
         .style("stroke", function () {
@@ -427,22 +429,22 @@
 
     function getStyle(element, styleName) {
         var styleText = d3.select(element).select("desc").text();
-
         
         var styleObject = JSON.parse(styleText);
-        console.log(styleObject[styleName]); //no styleName in styleObject --> goes to 1st item in desc
 
         return styleObject[styleName];
     }
+    */
+    
     //remove info label
     d3.select(".infolabel").remove();
   }
 
   //function to create dynamic label
   function setLabel(props) {
-    console.log("here!");
+    //console.log("here!");
     //label content
-    var labelAttribute = "<h3>" + props[expressed] + "</h3><b>" + expressed + "</b>";
+    var labelAttribute = "<h3>" + props[expressed] + "</h3>" + expressed + "";
 
     //create info label div
     var infolabel = d3
@@ -452,7 +454,11 @@
         .attr("id", props.NAME + "_label")
         .html(labelAttribute);
 
-    var countyName = infolabel.append("div").attr("class", "labelname").html(props.name);
+    //Replacing any dashes in the county NAME field in the csv with a space
+    var countyName = (props.NAME).toString().replace("-"," ");
+    var countyLabelText = "<b>" + countyName + " County </b>";
+
+    var countyLabel = infolabel.append("div").attr("class", "labelname").html(countyLabelText);
   }
 
   //function to move info label with mouse
@@ -463,7 +469,6 @@
         .getBoundingClientRect()
         .width;
 
-        /*
     //use coordinates of mousemove event to set label coordinates
     var x1 = event.clientX + 10,
         y1 = event.clientY - 75,
@@ -475,20 +480,13 @@
     //vertical label coordinate, testing for overflow
     var y = event.clientY < 75 ? y2 : y1; 
 
-    
     d3.select(".infolabel")
         .style("left", x + "px")
         .style("top", y + "px");
 
-        */
-
-        d3.select(".infolabel")
-          .style("left",4)
-          .style("right",4);
+    d3.select(".infolabel")
+        .style("left",4)
+        .style("right",4);
   }
-
-
-
-
 
 })();

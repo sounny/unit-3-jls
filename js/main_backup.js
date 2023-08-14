@@ -1,6 +1,6 @@
 //Script by Jessica Steslow for Lab 2
 
-//working copy for debugging
+//Backup JS file following module tutorials, before modifications to fix errors
 
 //wrap everything in an anonymous function which is immediately invoked
 //also prevents items in this JS file being in global scope
@@ -234,11 +234,11 @@
             else {return "#ccc";}
         })
         .on("mouseover", function(event, d){highlight(d.properties);})
-        .on("mouseout", function(event, d){dehighlight(d.properties, mapCounties);})
+        .on("mouseout", function(event, d){dehighlight(d.properties);})
         .on("mousemove", moveLabel);
 
     //building description element for enumeration units
-    //var desc = mapCounties.append("desc").text('{"stroke": "#333", "stroke-width": "2px"}');
+    var desc = mapCounties.append("desc").text('{"stroke": "#333", "stroke-width": "2px"}');
   };
 
   //function to create coordinated bar chart
@@ -263,7 +263,7 @@
         .attr("class", function(d){return "bars " + d.NAME;})
         .attr("width", mapWidth / csvData.length - 1)
         .on("mouseover", function(event, d){highlight(d);})
-        .on("mouseout", function(event, d){dehighlight(d), bars;})
+        .on("mouseout", function(event, d){dehighlight(d);})
         .on("mousemove", moveLabel);
 
     //annotate bars with attribute value text
@@ -273,19 +273,17 @@
         .append("text")
         .sort(function(a, b){return a[expressed]-b[expressed]})
         .attr("class", function(d){return "numbers " + d.NAME;})
-        .attr("text-anchor", "middle")
-        .on("mouseover",function(event, d){highlight(d)})
-        .on("mouseout",function(event, d){dehighlight(d), numbers})
-        .on("mousemove",moveLabel);
+        .attr("text-anchor", "middle");  
+
+        //mouse events not applied to these numbers
         
     updateChart(chartTitle, bars, numbers, csvData.length, colorScale, yScale);
 
     //building description element for bars, coincidentally the same as enumeration units
-    //var desc = bars.append("desc").text('{"stroke": "#333", "stroke-width": "2px"}');
+    var desc = bars.append("desc").text('{"stroke": "#333", "stroke-width": "2px"}');
 
     //building description element for numbers because numbers are on bars
-    //var desc = numbers.append("desc").text('{"stroke": "none", "stroke-width": "2px"}');
-
+    var desc = numbers.append("desc").text('{"stroke": "none", "stroke-width": "none"}');
   };
 
   //function to create a dropdown menu for attribute selection
@@ -344,15 +342,15 @@
         .duration(500);
 
     //set up numbers
-    var numbers = d3.selectAll(".numbers") //search for class .bars with child "numbers"
+    var numbers = d3.selectAll(".numbers")
         .sort(function(a,b){return a[expressed]-b[expressed]})
         .transition()
         .delay(function (d,i){return i*25})
         .duration(500);
 
     updateChart(chartTitle, bars, numbers, csvData.length, colorScale, yScale);
-    
 
+    //description code not added when a new attribute is selected, but maybe it should be?
   };
 
   function updateChart(chartTitle, bars, numbers, length, colorScale, yScale) {
@@ -380,9 +378,6 @@
             else {return "#ccc";}
         });
 
-
-
-        
     //update numbers
     numbers.attr("x", function (d, i) {
           var fraction = mapWidth / length;
@@ -409,12 +404,10 @@
             else {writeMode = "vertical-lr"};
             return writeMode;
         })
-        .text(function(d){
-          return parseInt(d[expressed]) //clears desc object in numbers?
-        }); 
-        
-        console.log(numbers);
+        .text(function(d){return parseInt(d[expressed])
+        });
 
+        
   };
 
   //function to highlight enumeration units and bars
@@ -423,24 +416,12 @@
     var selected = d3
         .selectAll("." + props.NAME)
         .style("stroke", "red")
-        .style("stroke-width", "2px")
-        .raise();
+        .style("stroke-width", 2);
     setLabel(props);
   }
 
   //function to reset the element style on mouseout
-  function dehighlight(props, element) {
-    
-    var strokeStyle = "#333";
-    var strokeWidthStyle = "2px";
-    
-    if(element == "numbers") {strokeStyle = "none"; strokeWidthStyle = "0"};
-
-    var selected = d3
-        .selectAll("." + props.NAME)
-        .style("stroke", strokeStyle)
-        .style("stroke-width", strokeWidthStyle);
-    /*
+  function dehighlight(props) {
     var selected = d3
         .selectAll("." + props.NAME)
         .style("stroke", function () {
@@ -452,13 +433,15 @@
 
     function getStyle(element, styleName) {
         var styleText = d3.select(element).select("desc").text();
-        
+
+        //errors with styleObject function, related to "desc" being null for numbers
+        //it's weird that this function works with the attribute on load
+        //but breaks when a user changes the attribute with the dropdown
         var styleObject = JSON.parse(styleText);
+        console.log(styleObject[styleName]); //no styleName in styleObject --> goes to 1st item in desc
 
         return styleObject[styleName];
     }
-    */
-    
     //remove info label
     d3.select(".infolabel").remove();
   }
@@ -488,7 +471,7 @@
         .getBoundingClientRect()
         .width;
 
-        
+    /* code commented out to isolate errors
     //use coordinates of mousemove event to set label coordinates
     var x1 = event.clientX + 10,
         y1 = event.clientY - 75,
@@ -505,11 +488,11 @@
         .style("left", x + "px")
         .style("top", y + "px");
 
-        
+    */
 
-        d3.select(".infolabel")
-          .style("left",4)
-          .style("right",4);
+    d3.select(".infolabel")
+      .style("left",4)
+      .style("right",4);
   }
 
 
@@ -517,24 +500,3 @@
 
 
 })();
-
-
-
-
-/*
-
-
-Doesn't throw error:
-
-<text class="numbers Gila" text-anchor="middle" x="56.16666666666667" y="335" writing-mode="horizontal-tb" style="stroke: none; stroke-width: 2px;">0<desc>{"stroke": "none", "stroke-width": "2px"}</desc></text>
-
-
-
-Throws error:
-
-<text class="numbers Gila" text-anchor="middle" x="56.16666666666667" y="139.02122138819388" writing-mode="horizontal-tb" style="stroke: none; stroke-width: 2px;">27</text>
-
-
-
-
-*/

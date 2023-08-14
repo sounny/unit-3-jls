@@ -1,25 +1,5 @@
 /*Add CSS styles here*/
 
-/*Styling items related to population data in bubblechart.js*/
-.axis path,
-.axis line {
-    fill: none;
-    stroke: black;
-    stroke-width: 1px;
-    shape-rendering: crispEdges;
-}
-
-.axis text {
-    font-family: sans-serif;
-    font-size: 0.9em;
-}
-
-.title {
-  font-family: sans-serif;
-  font-size: 1.5em;
-  font-weight: bold;
-}
-
 /*Styling items related to AZ county data in main.js*/
 .AZ {
   stroke: #333;
@@ -69,7 +49,6 @@
   fill: #333;
   font-family: sans-serif;
   font-weight: bold;
-  stroke-width: none;
 }
 
 .gratLines {
@@ -108,16 +87,19 @@ option {
 
 .infolabel {
   position: absolute;
-  height: 50px;
+  height: auto;
   min-width: 100px;
+  max-width: 300px;
   color: #fff;
   background-color: #edb200;
-  border: solid thin #fff;
+  border: solid 2px #eee;
   padding: 5px 10px;
   margin: 0 20px 0 0;
+  z-index: 10;
+  position:fixed;
 }
 
-.infolabel h1 {
+.infolabel h3 {
   margin: 0 20px 0 0;
   padding: 0;
   display: inline-block;

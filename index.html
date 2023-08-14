@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
+    <meta author="Jessica Steslow">
       <title>Environmental data per AZ County</title>
     <!--Favicon.io links-->
     <link rel="apple-touch-icon" sizes="180x180" href="favicon_io/apple-touch-icon.png">
@@ -31,19 +32,6 @@
         <br>
       </div>
       
-      
-      <!--Locator Map Section
-      <div class="container p-4 my-2 row">
-        <div class="text-end align-self-center pe-5 col-lg">
-          <h5>Arizona is a state in the <br>southwestern United States,<br> bordering Mexico.</h5>
-        </div>
-        <div class="col-lg d-flex justify-content-center">
-          <div class="d-flex" style="width:100%">
-            <img src="img/LocatorMapAZ_smaller.jpg"  style="filter:grayscale(0.2); border: 2px white solid; width:100%;">
-          </div>
-        </div>
-      </div> -->
-      
       <!--Map and Charts Section-->
       <div class="container" id="menudiv"></div>
       <div style="position:relative;" class="d-flex flex-wrap justify-content-center g-0">
@@ -52,10 +40,6 @@
             <div class="border border-warning" id="titlediv"></div>
           </div>
       </div>
-
-
-      
-
 
       <!--Sources and Definitions Section-->
       <div class="container border border-1 border-light p-5 my-5" style="min-height:700px;" id="sourcesdiv">
@@ -97,29 +81,29 @@
         </div>
         <div class="tab-pane" id="water" role="tabpanel" aria-labelledby="water-tab">
           <h5>Provisionally Impared Water Bodies</h5>
-          <p class="ms-3">Impared matching the Clean Water Act 303(d) Impaired Waters List.</p> 
+          <p class="ms-3 mb-4">Water matching the Clean Water Act 303(d) Impaired Waters List definition, where a water source is contaminated with an identified pollutant.</p> 
           <h5>Drinking Water Contaminants</h5>
-          <p class="ms-3">Per the EPA, water quality in public water systems are routinely measured. This parameter measures the number of contaminants exceeding the federal regulatory limit.</p>
+          <p class="ms-3 mb-4">Per the EPA, water quality in public water systems are routinely measured. This parameter measures the number of contaminants exceeding the federal regulatory limit.</p>
         </div>
         <div class="tab-pane" id="waste" role="tabpanel" aria-labelledby="waste-tab">
           <h5>Hazardous Waste Large Quantity Generators</h5>
-          <p>text</p>
+          <p class="ms-3 mb-4">A generator is any person who produces a hazardous waste as listed or characterized in part 261 of title 40 of the Code of Federal Regulations (CFR). These are categorized by size: very small, small, and large quantity generators (LQG). LQG generate more than 1,000 kilograms per month or more of hazardous waste or more than one kilogram per month of acutely hazardous waste.</p>
           <h5>Superfund Sites</h5>
-          <p>text</p>
+          <p class="ms-3 mb-4">Superfund refers to an EPA program to clean sites contaminated with hazardous waste, formally called the Comprehensive Environmental Response, A Compensation and Liability Act (CERCLA), established in 1980. Superfund Sites refer to the identifed sites within the Superfund program.</p>
           <h5>Active VRP Sites</h5>
-          <p>text</p>
+          <p class="ms-3 mb-4">These are sites in the Voluntary Remediation Program (VRP) of ADEQ. This program encourages property owners and other interested parties to invest resources in recovering contaminated sites quickly. In return, ADEQ forgoes enforcement at the site.</p>
           <h5>Leaking UST Sites</h5>
-          <p>text</p>
+          <p class="ms-3 mb-4">These are sites with a storage tank and pipework system that is at least 10% underground by volume - Underground Storage Tank (UST). USTs are federally regulated when they store petroleum or certain hazardous substances. Leaking USTs can pass the hazardous substances into soil or groundwater, contaminate drinking water sources, and create health and environmental risks.</p>
           <h5>Hazardous Waste Remediation Sites</h5>
-          <p>text</p>
+          <p class="ms-3">Hazardous waste is a special category or subset of regulated wastes that businesses generate. These are sites within the ADEQ Hazardous Waste Remediation program.</p>
         </div>
         <div class="tab-pane" id="demographics" role="tabpanel" aria-labelledby="demographics-tab">
-          <h5>Population</h5>
+          <h5>Population &</h5>
           <h5>Average Household Income</h5>
-          <p class="ms-3">Taken from 2022 county demographics data</p>
-          <h5>Republican</h5>
-          <h5>Democratic</h5>
-          <h5>Independent</h5>
+          <p class="ms-3 mb-4">Taken from 2022 county demographics data</p>
+          <h5>% Registered as Republican,</h5>
+          <h5>% Registered as Democratic, &</h5>
+          <h5>% Registered as Independent</h5>
           <p class="ms-3">Taken from the 2023 January Party Registration county information</p>
         </div>
         </div>
@@ -140,7 +124,7 @@
     </div>
     <script type="text/javascript" src="lib/d3.v7.js"></script>
     <script type="text/javascript" src="lib/topojson.min.js"></script>
-    <script type="text/javascript" src="js/main copy.js"></script>
+    <script type="text/javascript" src="js/main.js"></script>
     <!--Bootstrap JavaScript link-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
   </body>
