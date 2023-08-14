@@ -270,7 +270,7 @@
         .append("option")
         .attr("class", "titleOption")
         .attr("disabled", "true")
-        .text("Select Attribute");
+        .text("Select Attribute & Hover on Map or Chart");
 
     //add attribute name options
     var attrOptions = dropdown
@@ -392,8 +392,8 @@
 
     var selectedNumbers = d3
         .selectAll(".numbers." + props.NAME)
-        .style("stroke", "none")
-        .style("stroke-width", "0")
+        .style("stroke", "#333")
+        .style("stroke-width", "1.5px")
         .raise();
 
     setLabel(props);
